@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #character {
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+            position: absolute;
+            transition: transform 0.2s ease-out;
+        }
+
+        #directionButtons {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .directionButton {
+            width: 30px;
+            height: 30px;
+            margin: 0 5px;
+            background-color: gray;
+            cursor: pointer;
+        }
+    </style>
+    <title>Character Movement</title>
+</head>
+<body>
+
+<div id="character"></div>
+<div id="directionButtons">
+    <div class="directionButton" ontouchstart="startMoving('ArrowUp')" ontouchend="stopMoving()">↑</div>
+    <div class="directionButton" ontouchstart="startMoving('ArrowLeft')" ontouchend="stopMoving()">←</div>
+    <div class="directionButton" ontouchstart="startMoving('ArrowDown')" ontouchend="stopMoving()">↓</div>
+    <div class="directionButton" ontouchstart="startMoving('ArrowRight')" ontouchend="stopMoving()">→</div>
+</div>
+
+<script>
+    let x = window.innerWidth / 2 - 25;
+    let y = window.innerHeight / 2 - 25;
+    let movingInterval;
+
+    updateCharacterPosition();
+
+    function startMoving(direction) {
+        movingInterval = setInterval(() => moveCharacter(direction), 50);
+    }
+
+    function stopMoving() {
+        clearInterval(movingInterval);
+    }
+
+    function moveCharacter(direction) {
+        const speed = 10;
+
+        switch (direction) {
+            case 'ArrowUp':
+                y -= speed;
+                break;
+            case 'ArrowDown':
+                y += speed;
+                break;
+            case 'ArrowLeft':
+                x -= speed;
+                break;
+            case 'ArrowRight':
+                x += speed;
+                break;
+        }
+
+        updateCharacterPosition();
+    }
+
+    function updateCharacterPosition() {
+        document.getElementById('character').style.transform = `translate(${x}px, ${y}px)`;
+    }
+</script>
+</body>
+</html>
