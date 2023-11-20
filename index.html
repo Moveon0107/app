@@ -22,16 +22,28 @@
             position: fixed;
             bottom: 10px;
             left: 10px;
+            width: calc(150px + 4px * 6);
+            height: calc(150px + 4px * 6);
+            border: 2px solid black;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .directionButton {
-            width: 30px;
-            height: 30px;
-            margin: 0 5px;
-            background-color: gray;
+            width: 50px;
+            height: 50px;
+            background-color: rgb(200, 200, 200, 0.5);
             cursor: pointer;
+            user-select: none;
+            margin: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid black;
+            border-radius: 10px;
         }
     </style>
     <title>Character Movement</title>
@@ -40,10 +52,13 @@
 
 <div id="character"></div>
 <div id="directionButtons">
-    <div class="directionButton" ontouchstart="startMoving('ArrowUp')" ontouchend="stopMoving()">↑</div>
-    <div class="directionButton" ontouchstart="startMoving('ArrowLeft')" ontouchend="stopMoving()">←</div>
-    <div class="directionButton" ontouchstart="startMoving('ArrowDown')" ontouchend="stopMoving()">↓</div>
-    <div class="directionButton" ontouchstart="startMoving('ArrowRight')" ontouchend="stopMoving()">→</div>
+    <div class="directionButton" ontouchstart="startMoving('ArrowUp')" ontouchend="stopMoving()">▲</div>
+    <div style="display: flex;">
+    <div class="directionButton" ontouchstart="startMoving('ArrowLeft')" ontouchend="stopMoving()">◀</div>
+    <div class="directionButton" ontouchstart="startMoving('ArrowLeft')" ontouchend="stopMoving()">■</div>
+    <div class="directionButton" ontouchstart="startMoving('ArrowRight')" ontouchend="stopMoving()">▶</div>
+    </div>
+    <div class="directionButton" ontouchstart="startMoving('ArrowDown')" ontouchend="stopMoving()">▼</div>
 </div>
 
 <script>
@@ -88,3 +103,4 @@
 </script>
 </body>
 </html>
+
