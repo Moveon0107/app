@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +12,11 @@
         }
 
         #character {
-            width: 50px;
-            height: 50px;
+            width: 10vw;
+            height: 10vw;
             background-color: blue;
             position: absolute;
-            transition: transform 0.2s ease-out;
+            /* transition: transform 0.2s ease-out; */
         }
 
         #directionButtons {
@@ -24,7 +25,6 @@
             left: 10px;
             width: calc(150px + 4px * 6);
             height: calc(150px + 4px * 6);
-            border: 2px solid black;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -45,62 +45,138 @@
             border: 2px solid black;
             border-radius: 10px;
         }
+
+        #coordinate {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px;
+            font-size: 3vw;
+            background-color: rgb(200, 200, 200, 0.5);
+        }
+        .block {
+            width: 10vw;
+            height: 10vw;
+            background-color: greenyellow;
+
+        }
+        #guide {
+            display: none;
+        }
+
+        @media (orientation: portrait) {
+            #guide {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                background-color: black;
+                color: white;
+            }
+
+            #body {
+                display: none;
+            }
+        }
     </style>
     <title>Character Movement</title>
 </head>
-<body>
 
-<div id="character"></div>
-<div id="directionButtons">
-    <div class="directionButton" ontouchstart="startMoving('ArrowUp')" ontouchend="stopMoving()">▲</div>
-    <div style="display: flex;">
-    <div class="directionButton" ontouchstart="startMoving('ArrowLeft')" ontouchend="stopMoving()">◀</div>
-    <div class="directionButton" ontouchstart="startMoving('ArrowLeft')" ontouchend="stopMoving()">■</div>
-    <div class="directionButton" ontouchstart="startMoving('ArrowRight')" ontouchend="stopMoving()">▶</div>
+<body style="margin: 0;">
+    <div id="guide">
+        <div>
+            가로모드로 전환해주세요
+        </div>
     </div>
-    <div class="directionButton" ontouchstart="startMoving('ArrowDown')" ontouchend="stopMoving()">▼</div>
-</div>
+    <div id="body">
+        <div id="character"></div>
+        <div id="map">
+            <div class="block"></div>
+        </div>
+        <div id="coordinate">좌표: <span></span></div>
+        <div id="directionButtons">
+            <div class="directionButton" ontouchstart="startMoving('ArrowUp')" ontouchend="stopMoving('y')"
+                oncontextmenu="return false;">▲</div>
+            <div style="display: flex;">
+                <div class="directionButton" ontouchstart="startMoving('ArrowLeft')" ontouchend="stopMoving('x')"
+                    oncontextmenu="return false;">◀</div>
+                <div class="directionButton" onclick="" oncontextmenu="return false;">■</div>
+                <div class="directionButton" ontouchstart="startMoving('ArrowRight')" ontouchend="stopMoving('x')"
+                    oncontextmenu="return false;">▶</div>
+            </div>
+            <div class="directionButton" ontouchstart="startMoving('ArrowDown')" ontouchend="stopMoving('y')"
+                oncontextmenu="return false;">▼</div>
+        </div>
 
-<script>
-    let x = window.innerWidth / 2 - 25;
-    let y = window.innerHeight / 2 - 25;
-    let movingInterval;
+        <script>
+            /*let x = window.innerWidth / 2 - 25;
+            let y = window.innerHeight / 2 - 25;*/
+            let x = 0;
+            let y = 0;
+            let XmovingInterval, YmovingInterval;
 
-    updateCharacterPosition();
+            updateCharacterPosition();
 
-    function startMoving(direction) {
-        movingInterval = setInterval(() => moveCharacter(direction), 50);
-    }
+            function startMoving(direction) {
+                if (direction == 'ArrowUp' || direction == 'ArrowDown') {
+                    clearInterval(YmovingInterval);
+                    YmovingInterval = setInterval(() => {
+                        if (direction == 'ArrowUp' && y <= 0) return;
+                        moveCharacter(direction)
+                    }, 50);
+                }
+                if (direction == 'ArrowLeft' || direction == 'ArrowRight') {
+                    clearInterval(XmovingInterval);
+                    XmovingInterval = setInterval(() => {
+                        if (direction == 'ArrowLeft' && x <= 0) return;
+                        moveCharacter(direction)
+                    }, 50);
+                }
+            }
 
-    function stopMoving() {
-        clearInterval(movingInterval);
-    }
+            function stopMoving(direction) {
+                if (direction == 'x') {
+                    clearInterval(XmovingInterval);
+                } else if (direction == 'y') {
+                    clearInterval(YmovingInterval);
+                } else {
+                    throw Error("예기치 못한 오류");
+                }
+            }
 
-    function moveCharacter(direction) {
-        const speed = 10;
+            function moveCharacter(direction) {
+                const speed = 2.5;
 
-        switch (direction) {
-            case 'ArrowUp':
-                y -= speed;
-                break;
-            case 'ArrowDown':
-                y += speed;
-                break;
-            case 'ArrowLeft':
-                x -= speed;
-                break;
-            case 'ArrowRight':
-                x += speed;
-                break;
-        }
+                switch (direction) {
+                    case 'ArrowUp':
+                        y -= speed;
+                        break;
+                    case 'ArrowDown':
+                        y += speed;
+                        break;
+                    case 'ArrowLeft':
+                        x -= speed;
+                        break;
+                    case 'ArrowRight':
+                        x += speed;
+                        break;
+                }
 
-        updateCharacterPosition();
-    }
-
-    function updateCharacterPosition() {
-        document.getElementById('character').style.transform = `translate(${x}px, ${y}px)`;
-    }
-</script>
+                updateCharacterPosition();
+            }
+            function updateCharacterPosition() {
+                document.getElementById('character').style.transform = `translate(${x}vw, ${y}vw)`;
+                document.querySelector('#coordinate span').textContent = `${x / 10}, ${-y / 10}`;
+                document.body.style.marginLeft = 45 - x + "vw";
+                document.body.style.marginTop = "calc((" + (-y - 5) + "vw) + 50vh)";
+            }
+        </script>
+    </div>
 </body>
-</html>
 
+</html>
